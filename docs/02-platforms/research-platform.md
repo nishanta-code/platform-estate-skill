@@ -14,7 +14,7 @@
 | Live domain | `https://research.example.com` (hardcoded `SITE` in `scripts/prerender-pages.mjs`, `SITE_URL` default in `supabase/functions/_shared/checkout.ts`) |
 | Own Supabase project (auth + edge functions) | `<RESEARCH_REF>` (`supabase/config.toml` `project_id`); browser client `src/integrations/supabase/client.ts` built from `VITE_SUPABASE_URL` + `VITE_SUPABASE_PUBLISHABLE_KEY` (`.env` also carries `VITE_SUPABASE_PROJECT_ID`) |
 | Central data project | `<ESTATE_REF>`, schema **`research`** (43-44 tables + 7 views, see §4) plus shared `public` catalogue; reached ONLY from edge functions via `EXT_SUPABASE_URL` + `EXT_SUPABASE_SERVICE_KEY` (`supabase/functions/_shared/central.ts`) |
-| Platform slug used in Stripe metadata | `sirluther-web` (`_shared/checkout.ts` `PLATFORM_SLUG`); catalogue program codes are `ZL-SIR-*` (e.g. `ZL-SIR-SIRR-151126` research, `ZL-SIR-SIRI-*` impact suggested) |
+| Platform slug used in Stripe metadata | `research-web` (`_shared/checkout.ts` `PLATFORM_SLUG`); catalogue program codes are `ZL-RES-*` (e.g. `ZL-RES-FLAG-151126` research, `ZL-RES-IMPACT-*` impact suggested) |
 | Stack | Vite 5 + React 18 + TypeScript + Tailwind + shadcn/Radix, react-router-dom 6, TanStack Query, react-helmet-async, framer-motion, recharts, `@stripe/react-stripe-js` (Payment Element), jspdf/html-to-image (teacher kit PDF), papaparse (bulk paper upload). **Build-time SSR/prerender** via `vite.ssr.config.ts` + `src/entry-prerender.tsx` (see §3.6) |
 | Package manager | Lovable default is **bun** (`bun.lock`, `bun.lockb`), but `package-lock.json` is also committed and README says `npm i`. Both lockfiles exist; treat bun as canonical for Lovable builds |
 | Commits | 499 commits, 2026-10-05 → 2026-11-16 on this remote. The repo history starts 2026-10-05, but `.lovable/plan/*.md` documents go back to 2026-08-08 (pre-migration assessment 2026-08-24, custom /pay checkout 2026-08-24), so the Lovable project pre-dates the GitHub remote |
@@ -41,7 +41,7 @@ Research Platform sells mentored research programmes whose deliverable is a publ
 | `impact` | `global-impact-fellowship` | "Research Platform \| Global Impact Fellowship" | `/impact-fellowship/apply` | Grades 9-12, 16 weeks (paper weeks 1-8 + passion project 9-16), $1,299 / $1,799. Currently "New cohorts coming soon", application buttons disabled (roadmap) |
 | `young` | `young-researchers-programme` | "Research Platform \| Young Researchers Programme" | `/young-researchers/apply` | Grades 6-8, 6 weeks, Saturdays 10:00-11:30 EDT, $799 (early 599 per pre-migration doc) |
 
-Other revenue/lead surfaces: an **Australia edition** of the Research Fellowship (`/research-fellowship-aus`, cohort code `ZL-SIR-SIRR-240127`, USD 1,199, dedicated portal form since 2026-11-13), the **university Student Mentor Research Masterclass Series** (free Zoom sessions, lead capture → fellowship), the **Global Research Competition** (standalone static page at `/competition`, USD 80 early bird / 100 regular per plan doc), the **Research Interest Questionnaire** (free resource), the **School nomination** flow (schools nominate up to 10 students), free **teacher resources** (worksheets, guides, slide decks), the **Topic Finder** AI tool, the **Ask the Mentors** question form, `/project-10k`, custom programmes for schools, and a 44-post SEO blog. Sales chat ("Luther") captures leads and recommends a programme.
+Other revenue/lead surfaces: an **Australia edition** of the Research Fellowship (`/research-fellowship-aus`, cohort code `ZL-RES-FLAG-240127`, USD 1,199, dedicated portal form since 2026-11-13), the **university Student Mentor Research Masterclass Series** (free Zoom sessions, lead capture → fellowship), the **Global Research Competition** (standalone static page at `/competition`, USD 80 early bird / 100 regular per plan doc), the **Research Interest Questionnaire** (free resource), the **School nomination** flow (schools nominate up to 10 students), free **teacher resources** (worksheets, guides, slide decks), the **Topic Finder** AI tool, the **Ask the Mentors** question form, `/project-10k`, custom programmes for schools, and a 44-post SEO blog. Sales chat ("Luther") captures leads and recommends a programme.
 
 ---
 
@@ -94,7 +94,7 @@ Public marketing (all prerendered unless noted):
 - **Research modules / proposal generator**: tables `research_projects`, `module_progress`, `module_assignments`, `citations`, `generated_proposals`, `teacher_feedback`, `teacher_students` still exist in central `research` (all 0 rows) but the UI was removed in cleanup wave 3; `src/lib/modules.ts`, `src/lib/professorOutreach.ts`, `src/lib/postPublicationPathways.ts` remain as content libraries.
 - **School outreach engine** (admin `/admin/outreach`, `components/admin/SchoolLeadsManager.tsx`): `generate-school-leads` (AI), `scrape-school-directories` + `verify-school-websites` + `enrich-school-lead` (Firecrawl + AI, all guarded by `_shared/ssrfGuard.ts`), scoring in `src/lib/intelligence/scoring.ts` and `src/lib/scoreLead.ts`; `school_leads` carries ICP/geo/signal scores and counsellor state. Smartlead/Apollo pipeline functions were removed in wave 3 (config.toml still lists their `verify_jwt=false` entries: `enrich-teacher-via-apollo`, `sync-contacts-to-smartlead`, `smartlead-webhook`, `import-contacts-batch`, `auto-segment-contacts`, `score-school-lead`, `recompute-intelligence-cron`, `intelligence-strategy-prompt`, `enrich-leads-pipeline`, `generate-research-topics` directories exist for some, not all).
 - **Masterclass**: sessions come from the central catalogue (`all_masterclasses_public`); registrations go to `public.research_masterclass_regs`; confirmation email pulls Zoom `join_url`/`passcode` server-side from `public.all_masterclasses` (never exposed to the browser).
-- **Analytics**: `components/Analytics.tsx` → `central-db track_event` → `research.analytics_events` (2,728 rows, 25 MB — the largest sirluther table); GA4 id served by `ga-config`.
+- **Analytics**: `components/Analytics.tsx` → `central-db track_event` → `research.analytics_events` (2,728 rows, 25 MB — the largest research table); GA4 id served by `ga-config`.
 - **WhatsApp**: WATI flows (`send-whatsapp`), settings in `research.whatsapp_settings`, log in `research.whatsapp_messages`, admin UI `/admin/whatsapp`.
 
 ### 3.6 Responsive, SEO and SSR
@@ -110,7 +110,7 @@ Public marketing (all prerendered unless noted):
 
 ### 4.1 Central schema `research` (live on `<ESTATE_REF>`, 2026-11-24)
 
-44 base tables + 7 views (`all_cohorts`, `all_masterclasses`, `all_masterclasses_public`, `all_mentors`, `all_partners`, `all_programs`, `research_masterclass_regs`). Full column lists are in `docs/01-supabase/schema-sirluther-sat-purpose-teo.md`; grouped summary:
+44 base tables + 7 views (`all_cohorts`, `all_masterclasses`, `all_masterclasses_public`, `all_mentors`, `all_partners`, `all_programs`, `research_masterclass_regs`). Full column lists are in `the live column dumps in `reference/sql/estate-columns-research.md``; grouped summary:
 
 - Applications/registrations: `research_masterclass_regs` (view over `public.research_masterclass_regs`, 18 live rows). **`public.sirluther_applications` / `research.sirluther_applications` no longer exist on the live central DB** — applications now sit in `public.applications` (173 rows with `ZL-SIR*` codes). The code (`_shared/applicationsStandard.ts` `APPLICATIONS_TABLE = "sirluther_applications"`, AGENTS.md) still targets the retired name; see §9.
 - Leads: `site_leads`, `teacher_leads`, `topic_finder_leads`, `mentor_questions`, `captured_leads`, `chat_conversations`, `referrals`, `school_nominations` + `school_nomination_students`, `questionnaire_responses`.
@@ -124,10 +124,10 @@ Public marketing (all prerendered unless noted):
 ### 4.2 Functions, triggers, RLS (live)
 
 - SQL functions in `research`: `accept_invitation`, `attribution_value`, `catalogue_for_cohort`, `dial_for_country`, `enforce_application_insert_defaults`, `enforce_masterclass_insert_defaults`, `form_answer_get/set`, `get_invitation_by_token`, `has_role`, `is_staff`, `lock_teacher_students_student_update`, `lookup_teacher_by_email`, `normalize_application_fields`, `normalize_phone_digits`, `record_payment_attribution(_id,_intent,_touch)` (row-locking append of per-intent payment touches), `sheet_safe_phone`, `submit_public_application(_payload)`, `submit_public_masterclass_registration(_payload)`, `tg_default_utm`, `tg_sheet_safe_phone`, `tg_standard_application_format`, `update_updated_at_column`.
-- Triggers: `updated_at` touchers on most tables; `sheet_safe_phone_biu` on `site_leads` and `mentor_questions`; `trg_lock_teacher_students_student_update`; on `public.research_masterclass_regs`: `sirluther_regs_default_utm`, `sirluther_regs_safe_phone`, and an Apps Script sync `script sync sirluther mast` (http_request to script.google.com); on `questionnaire_responses`: `script sync sirluther qr resp`.
+- Triggers: `updated_at` touchers on most tables; `sheet_safe_phone_biu` on `site_leads` and `mentor_questions`; `trg_lock_teacher_students_student_update`; on `public.research_masterclass_regs`: `research_regs_default_utm`, `research_regs_safe_phone`, and an Apps Script sync `script sync research mast` (http_request to script.google.com); on `questionnaire_responses`: `script sync research qr resp`.
 - RLS: every table has RLS enabled. Policies exist only for `analytics_events`, `country_dial_*`, `email_send_log`, `email_templates`, `outreach_sync_log`, `program_email_settings`, `suppression_list`, `webhook_log`, `whatsapp_messages`, `whatsapp_settings` (admin SELECT via `research.has_role(auth.uid(),'admin')`), `user_roles` (self read), dial codes public where `is_public`. Everything else is **fail-closed**: only the service role (edge functions) can touch it. This is why every browser path goes through `central-db`.
 - Views `public.sirluther_questionnaire_response` and `public.sirluther_school_nominations` are `security_invoker` sheet-shaped views for Google Sheets export.
-- Cron: none scoped to sirluther on central (`cron.job` has no sirluther entries); the own-project migrations once scheduled `reconcile-replication-log` (dropped 2026-08-24). Payment reminders run in cron mode only if something calls `send-payment-reminders` without a body (no central cron found — **inferred** owner-triggered or Lovable-scheduled).
+- Cron: none scoped to research on central (`cron.job` has no research entries); the own-project migrations once scheduled `reconcile-replication-log` (dropped 2026-08-24). Payment reminders run in cron mode only if something calls `send-payment-reminders` without a body (no central cron found — **inferred** owner-triggered or Lovable-scheduled).
 
 ### 4.3 Own-project migrations (`supabase/migrations/`, 128 files)
 
@@ -135,7 +135,7 @@ Chronology: 2025-12-18 first tables (profiles, user_roles, research_projects, mo
 
 ### 4.4 Edge functions (`supabase/functions/`)
 
-`verify_jwt = false` is set in `supabase/config.toml` for: generate-og-image, check-paper-links, sirluther-cohort-webhook-caller, submit-google-form, generate-research-topics, generate-school-leads, scrape-school-directories, sales-chat, verify-school-websites, find-school-contacts, sync-topic-leads-n8n, score-school-lead, enrich-school-lead, recompute-intelligence-cron, intelligence-strategy-prompt, enrich-teacher-via-apollo, enrich-leads-pipeline, sync-contacts-to-smartlead, smartlead-webhook, import-contacts-batch, auto-segment-contacts, stripe-webhook, submit-public-form, get-stripe-config, checkout-context. Functions not listed default to JWT-verified at the gateway.
+`verify_jwt = false` is set in `supabase/config.toml` for: generate-og-image, check-paper-links, research-cohort-webhook-caller, submit-google-form, generate-research-topics, generate-school-leads, scrape-school-directories, sales-chat, verify-school-websites, find-school-contacts, sync-topic-leads-n8n, score-school-lead, enrich-school-lead, recompute-intelligence-cron, intelligence-strategy-prompt, enrich-teacher-via-apollo, enrich-leads-pipeline, sync-contacts-to-smartlead, smartlead-webhook, import-contacts-batch, auto-segment-contacts, stripe-webhook, submit-public-form, get-stripe-config, checkout-context. Functions not listed default to JWT-verified at the gateway.
 
 | Function | Trigger | Auth model | Central tables | Purpose |
 |---|---|---|---|---|
@@ -147,7 +147,7 @@ Chronology: 2025-12-18 first tables (profiles, user_roles, research_projects, mo
 | `create-payment-intent` | checkout | anonymous + token | catalogue, promo_codes, applications | Recomputes amount (early bird only if < sticker), re-validates promo, builds the frozen metadata contract (`buildMetadata`), creates/reuses PaymentIntent |
 | `validate-promo` | checkout promo box | anonymous | `public.promo_codes` | Family-aware promo validation, single generic error message |
 | `payment-outcome` | `/pay/success` | anonymous with `client_secret` | applications | Same idempotent `finalizePaymentIntent` as the webhook; returns `needs_details`, `apply_url` |
-| `stripe-webhook` | Stripe | signature HMAC (`timingSafeEqual`), no JWT | applications, `stripe_payments` (ledger via refund branch) | `payment_intent.succeeded` with `platform=sirluther-web` → finalize; `charge.refunded`/`refund.created` → cumulative refund reconciliation (`_shared/refundStatus.ts`); legacy checkout sessions no longer tracked; permanent DB errors acknowledged with 200 |
+| `stripe-webhook` | Stripe | signature HMAC (`timingSafeEqual`), no JWT | applications, `stripe_payments` (ledger via refund branch) | `payment_intent.succeeded` with `platform=research-web` → finalize; `charge.refunded`/`refund.created` → cumulative refund reconciliation (`_shared/refundStatus.ts`); legacy checkout sessions no longer tracked; permanent DB errors acknowledged with 200 |
 | `complete-registration` | apply form with `?complete=` | signed token | applications | Merges full form into the paid row; identity/cohort never overwritten |
 | `send-application-email` | internal (`triggerEmail`), admin UI, reminders | service role / staff | `email_templates`, `email_send_log`, `program_email_settings`, `all_masterclasses` (join details) | Renders templates (types include application confirmation, payment confirmation, `pending_registration`, `masterclass_confirmation`, reminders), sends via Gmail SMTP; every link tagged `lwl-automation/email/auto-reminder` (`_shared/automationAttribution.ts`) |
 | `send-payment-reminders` | cron mode (no body) or admin mode | `requireTeacherOrCron` | applications, catalogue | Unpaid >30 min never reminded; admin can force by cohort/program; unresolved program codes fail closed |
@@ -168,13 +168,13 @@ Chronology: 2025-12-18 first tables (profiles, user_roles, research_projects, mo
 | `generate-school-leads`, `scrape-school-directories`, `verify-school-websites`, `enrich-school-lead` | admin outreach | `requireTeacher` **(inferred for some; config marks them verify_jwt=false)** | `school_leads` | AI + Firecrawl discovery/verification/enrichment, SSRF-guarded |
 | `accept-invite` | `/invite/:token` | signed-in user | `staff_invitations`, `user_roles` | Calls `research.accept_invitation` |
 | `ga-config`, `get-stripe-config` | page load | anonymous | — | Expose GA4 id / Stripe publishable key |
-| `sirluther-cohort-webhook-caller` | DB/external | `SYNC_API_KEY` header | — | Forwards to an external webhook on project `jjwtdlnvpqjdxzmhkvyd` (legacy cohort sync) |
+| `research-cohort-webhook-caller` | DB/external | `SYNC_API_KEY` header | — | Forwards to an external webhook on project `<LEGACY_REF>` (legacy cohort sync) |
 
 ### 4.5 `_shared` helpers
 
 | File | Role |
 |---|---|
-| `central.ts` | `centralClient()` (schema sirluther), `centralPublicClient()` (public, for private masterclass columns), `CENTRAL_URL` normalisation (`/rest/v1` suffix stripped) |
+| `central.ts` | `centralClient()` (schema research), `centralPublicClient()` (public, for private masterclass columns), `CENTRAL_URL` normalisation (`/rest/v1` suffix stripped) |
 | `checkout.ts` | Platform constants, `loadCatalogue()` (early-bird rule: `early > 0 && (sticker <= 0 || early <= sticker)`; cohorts bookable only while `start_date > today`), HMAC checkout tokens (`makeCheckoutToken`/`readCheckoutToken`), **`timingSafeEqual`**, `completionApplyUrlFor`, `buildMetadata()` (alphabetical, blanks dropped, `program_code` mandatory, `catalog_source`, `deal_type`, `payment_link_*`, `pay_mode: full`, frozen attribution), `triggerEmail`, `triggerWhatsApp`, `catalogueProgramNameForCode` |
 | `promo.ts` | Central `public.promo_codes` family logic (`SAVE15`, `SAVE15-2`…), one generic rejection message, `applyDiscount`, `recordRedemption` |
 | `paymentLinks.ts` | Read-only `portal.get_public_payment_link(_slug)`; amount from `settings.full_price.amount`; `deal_type`, `locked_cohort_code`, `external_form`, same-origin `apply_path`; `[payment_link:<slug>]` tag stored in admin notes; distinguishes `missing` vs `error` so a failed lookup never falls back to list price |
@@ -239,7 +239,7 @@ Application UTMs are frozen at first save (central trigger `tg_default_utm` + `_
 | 2026-09 | Catalogue cohorts added, university masterclass series Oct 2026, eligibility grades 8-12, homepage FAQ schema |
 | 2026-10-05 | GitHub remote starts ("Update paper count to 400+"); 395 commits in October |
 | 2026-10-07 | Blank-form flash fix, crawler-blocking routes fixed, homepage layout |
-| 2026-10-13/14 | B2B checkout guard; refund tracking + handler; "Performed sirluther migration" / "Migrated app save to new format" (47-column standard) |
+| 2026-10-13/14 | B2B checkout guard; refund tracking + handler; "Performed research migration" / "Migrated app save to new format" (47-column standard) |
 | 2026-10-17 | Email tracking + refunds fixed; v5 category mappings; "Documented v5 gaps and blocked launch" |
 | 2026-10-26/27 | AUS cohort page, competition page, questionnaire |
 | 2026-11-02/05 | Questionnaire backfill; **security hardening: pinned CDN imports, tightened role self-add, SSRF guard**; early-bird discount visibility fix |

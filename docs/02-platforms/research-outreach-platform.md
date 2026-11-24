@@ -15,10 +15,10 @@
 | Local folder | `D:\the Group\Vs Code Studio\Research Outreach` |
 | Git remote | `https://github.com/<org>/<repo>` (origin, fetch+push) |
 | Commits | **124** on the checked-out branch, 2026-10-16 (template) -> 2026-11-06 (last) |
-| Authors (by commit count) | `gpt-engineer-app[bot]` 98 (Lovable editor), `nishanta-code` 25 (local Claude Code sessions, 11-05/11-06), `Lovable` 1 |
+| Authors (by commit count) | `an-ai-builder-bot` 98 (Lovable editor), `the-operator` 25 (local Claude Code sessions, 11-05/11-06), `Lovable` 1 |
 | Lovable project | Yes. `.lovable/project.json` = template `tanstack_start_ts_current`, revision `tanstack_start_ts_current-3341755609d5`. Lovable plan files in `.lovable/plan/`. `AGENTS.md` carries the Lovable "do not rewrite history" banner. |
 | Published URL (per README/code) | `https://brain-preview.lovable.app` (login at `/login`, OAuth consent at `/oauth/consent`; hard-coded as `LOGIN_URL` in `src/components/onboarding-guide.tsx`). README mentions a custom-domain intent `research-auth.example-group.com` in the 10-26 plan, **not verified as live**. |
-| Page title brand | "LwL Research Brain" (`pageHead()` suffix in `src/lib/route-guard.ts`); sidebar brand "Research Brain"; author meta "Learn With Leaders". |
+| Page title brand | "Group Research Brain" (`pageHead()` suffix in `src/lib/route-guard.ts`); sidebar brand "Research Brain"; author meta "the Group". |
 | Stack | TanStack Start 1.168 + TanStack Router 1.170 (file routes, `ssr: false` on most routes), React 19.2, TanStack Query 5, Tailwind CSS 4 (`@tailwindcss/vite`), shadcn/ui (new-york, Radix), lucide-react, zod 3, sonner, recharts (installed, unused in routes), `react-email-editor` (Unlayer), `@supabase/supabase-js` 2.118. Build via `@lovable.dev/vite-tanstack-config` 2.26.5 (wraps Vite 8 + nitro 3 beta, Cloudflare default target -> `.wrangler/` dir present). |
 | Package manager | **bun** (`bun.lock`, `bunfig.toml` with `minimumReleaseAge = 86400` supply-chain guard). `package.json` also has `"overrides": { "rolldown": "1.2.1" }` which npm treats differently from bun (see Gotchas). README still says `npm i`. |
 | Test runner | vitest 4 + jsdom + @testing-library/react (11 test files, `bun run test`). |
@@ -39,7 +39,7 @@ Three Supabase project refs appear in history:
 
 | Ref | Name (from plans/tests) | Role for this repo |
 |---|---|---|
-| `txmlngnuwqqhgdtqjydc` | "LwL Master Research" (legacy; `.lovable/plan/...2026-10-26.md`) | Original backend 10-26 -> 10-29. Removed at the "Brain cutover"; `src/test/brain-research.test.ts` asserts no research code references it. |
+| `txmlngnuwqqhgdtqjydc` | "Group Master Research" (legacy; `.lovable/plan/...2026-10-26.md`) | Original backend 10-26 -> 10-29. Removed at the "Brain cutover"; `src/test/brain-research.test.ts` asserts no research code references it. |
 | `<BRAIN_REF>` | "Brain" | The only runtime backend since 2026-10-29. All auth + all data via `brain_api_*` RPCs. |
 | `<DATA_REF>` | "the Group" (org project) | **Zero references anywhere in the repo or its history** (`git log -S` returns nothing). See section 9. |
 
@@ -47,10 +47,10 @@ Three Supabase project refs appear in history:
 
 ## 2. Business purpose
 
-A staff-only internal portal for Learn With Leaders' school-research and outreach team, evolving in two phases:
+A staff-only internal portal for the Group' school-research and outreach team, evolving in two phases:
 
 1. **Identity & Access Portal (10-26 -> 10-29)** – Brain Auth sign-in, password reset, OAuth 2.1 consent screen so
-   ChatGPT Business (the "LwL Intelligence Brain" MCP app at `.../functions/v1/brain-mcp`) can connect staff
+   ChatGPT Business (the "Group Intelligence Brain" MCP app at `.../functions/v1/brain-mcp`) can connect staff
    accounts, and an admin "Team Access & Approvals" page that grants `researcher`/`admin` membership in Brain.
 2. **Research-to-Revenue Intelligence Dashboard (11-05 -> 11-06)** – read-only research views (schools, contacts,
    research ops, historical coverage) plus a campaign system: create campaigns in Brain *before* sending, map NPF/Meritto
@@ -231,7 +231,7 @@ All are `createServerFn({ method: "POST" }).middleware([requireBrainAuth])`; "se
 ### 5.1 Sources of truth available locally
 - **One committed migration**: `supabase/migrations/20261029121253_<uuid>.sql` (admin list/set member role RPCs; full text in `docs/01-supabase/brain-rpc-pattern.md`).
 - **Generated types** `src/integrations/supabase/types.ts` (4 855 lines, last regenerated 2026-11-03 from Brain's `public` schema; AGENTS.md calls it inert – nothing imports it except the unused `client.ts`).
-- **Commit messages** from 11-05/11-06 (nishanta-code) describe every RPC/trigger/cron/table touched; the SQL itself was applied directly to Brain through the Supabase MCP and **is not in the repo**.
+- **Commit messages** from 11-05/11-06 (the-operator) describe every RPC/trigger/cron/table touched; the SQL itself was applied directly to Brain through the Supabase MCP and **is not in the repo**.
 - `src/lib/campaigns-data.ts` comment: campaign RPCs are "SECURITY DEFINER, gated to admin/lead via brain_ops.member_roles, read-only ... See migration applied 2026-11-05" (that migration is not committed).
 
 ### 5.2 Schemas and tables referenced
@@ -351,7 +351,7 @@ Admin approves a signed-up Brain user as researcher (confirmation dialog) -> `br
 **Verifiable from this repo**
 - The app talks to exactly one database: Brain `<BRAIN_REF>` (`BRAIN_PROJECT_REF` constant, tests assert it).
 - Brain's `public` schema (types snapshot 2026-11-03) contains the same family of `research_*` tables (`research_contact_health`, `research_contacts`, `research_schools`, `research_campaigns`, ...) plus `people/organizations/consents/suppressions/staff*` and the `lwl_migration_*_v2(p_token)` / `brain_api_ingest_legacy_batch(p_batch_key,p_rows,p_run_id,p_source_cursor,p_source_table)` / `brain_api_verify_master_sync(p_payload_text,p_signature)` / `brain_api_master_migration_status()` functions – i.e. Brain has token-authenticated **ingestion endpoints for batches from a "legacy"/"master" source**. The `research_legacy_source_map` table and the Research page copy ("Historical research from older systems is not linked to your account here") corroborate a migration from an older system.
-- The repo never names `<DATA_REF>`; the only "old" project it names is `txmlngnuwqqhgdtqjydc` ("LwL Master Research").
+- The repo never names `<DATA_REF>`; the only "old" project it names is `txmlngnuwqqhgdtqjydc` ("Group Master Research").
 
 **Verified by read-only catalogue queries on `<DATA_REF>` (2026-11-24, this session)**
 - Schemas: `attribution, brain, core_ro, leads, legacy_ro, legacy_sat, lwl, migration, quarantine, revenue_brain, staging, public` (+ Supabase system schemas).
@@ -612,7 +612,7 @@ bun run build               # nitro build (cloudflare default target)
 | 2026-10-26 identity portal | `/`, `/login`, `/reset-password`, `/auth/callback`, `/oauth/consent` (+ `/.lovable/...`), `/account`, `/access-denied`; membership from a `research_members` table on **Master Research** (`txml...`) via a server-only key; white/navy/teal design; custom domain `research-auth.example-group.com` | Routes shipped as planned; membership source moved to Brain `brain_ops.member_roles` via `brain_api_my_roles` on 10-29; privileged key removed; design later replaced by dark violet; domain not verifiable |
 | 2026-10-27 role-based dashboard | `_app` layout, Overview/Schools/Contacts/Research/Outreach/Programs/Revenue/Members/Profile, `permissions.ts`, `data.functions.ts` using `supabaseAdmin` with limit-50 selects | Layout + pages shipped; `supabaseAdmin` disabled at cutover; Programs/Revenue remain stubs and are hidden from nav; Outreach exists but hidden |
 | 2026-10-29 team access & approvals | rename to Team Access & Approvals, pending vs active members, confirm-gated approve/remove, admin grant separate | Shipped (`team-access.tsx`, tests), plus the ChatGPT onboarding wizard |
-| (no plan file) 11-05/11-06 | – | Campaigns/Sources/Data Health, three-UTM, NPF import/export, Instantly, templates, settings, theme – all authored locally with Claude Code and pushed (25 commits by `nishanta-code`) |
+| (no plan file) 11-05/11-06 | – | Campaigns/Sources/Data Health, three-UTM, NPF import/export, Instantly, templates, settings, theme – all authored locally with Claude Code and pushed (25 commits by `the-operator`) |
 
 Still-open roadmap gates (`roadmap.md`): verify real Brain staff membership/RLS/reset/consent in production; enable programme/revenue/evidence capabilities once Brain exposes verified RPCs; editor-managed Supabase binding switch (cosmetic – runtime is independent).
 

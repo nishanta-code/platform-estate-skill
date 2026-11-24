@@ -5617,7 +5617,7 @@ begin
 
   if v_n > 0 then
     insert into lms.notifications (type, title, body, link_url)
-      values ('vault', 'Your Program Is Complete', 'Your EffortFirst completion reward has been credited in My Vault.', '/student/vault')
+      values ('vault', 'Your Program Is Complete', 'Your Ops Rewards completion reward has been credited in My Vault.', '/student/vault')
       returning id into v_notif;
     insert into lms.notification_recipients (notification_id, student_user_id)
       select v_notif, e.student_user_id from lms.enrollments e where e.cohort_id = new.cohort_id and e.access_status = 'active';
@@ -6265,7 +6265,7 @@ begin
       update lms.vault_lots set state = 'expired', remaining = 0
         where student_user_id = r.student_user_id and wallet = 'effort' and state = 'available';
       insert into lms.vault_ledger (student_user_id, wallet, kind, amount, ref_type, description)
-        values (r.student_user_id, 'effort', 'expire', -r.bal, 'expiry', 'EffortFirst credit expired after ' || v_settings.effort_inactivity_months || ' months of inactivity');
+        values (r.student_user_id, 'effort', 'expire', -r.bal, 'expiry', 'Ops Rewards credit expired after ' || v_settings.effort_inactivity_months || ' months of inactivity');
     end if;
   end loop;
   return query
@@ -6710,7 +6710,7 @@ end $function$
 | has_role | _user_id uuid, _role text | boolean | sql | DEFINER | stable | search_path=portal, public | authenticated |
 | import_whatsapp_undeliverable | p_rows jsonb, p_source_file text, p_actor uuid | jsonb | plpgsql | invoker | volatile | search_path=pg_catalog, portal |  |
 | is_admin | user_id uuid | boolean | sql | DEFINER | stable | search_path=portal, public | authenticated |
-| is_aldar_admin | user_id uuid | boolean | sql | DEFINER | stable | search_path=portal, public | authenticated |
+| is_partner_school_admin | user_id uuid | boolean | sql | DEFINER | stable | search_path=portal, public | authenticated |
 | is_lwl_admin | user_id uuid | boolean | sql | DEFINER | stable | search_path=portal, public | authenticated |
 | is_manager | user_id uuid | boolean | sql | DEFINER | stable | search_path=portal, public | authenticated |
 | is_school_admin | user_id uuid | boolean | sql | DEFINER | stable | search_path=portal, public | authenticated |
@@ -7207,15 +7207,15 @@ AS $function$ SELECT EXISTS (SELECT 1 FROM portal.user_profiles p WHERE p.user_i
 
 ```
 
-#### portal.is_aldar_admin(user_id uuid)
+#### portal.is_partner_school_admin(user_id uuid)
 
 ```sql
-CREATE OR REPLACE FUNCTION portal.is_aldar_admin(user_id uuid)
+CREATE OR REPLACE FUNCTION portal.is_partner_school_admin(user_id uuid)
  RETURNS boolean
  LANGUAGE sql
  STABLE SECURITY DEFINER
  SET search_path TO 'portal', 'public'
-AS $function$ SELECT EXISTS (SELECT 1 FROM portal.user_profiles p WHERE p.user_id = is_aldar_admin.user_id AND p.role::text = 'aldar_admin'); $function$
+AS $function$ SELECT EXISTS (SELECT 1 FROM portal.user_profiles p WHERE p.user_id = is_partner_school_admin.user_id AND p.role::text = 'partner_school_admin'); $function$
 
 ```
 

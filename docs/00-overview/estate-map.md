@@ -81,7 +81,7 @@ Created 2026-03-26. Business schemas present live on 2026-11-24:
 | `affiliate` | Growth Partner Portal | partners, promo_code_links, payment_link_links, admins, schools, payouts, resources, announcements, registration_attempts |
 | `finance` | Console (formerly `sales`) | program_codes registry, wallex/dbs transactions, xero invoices, vendor bills, budgets, fx |
 | `stud_leaders` | Student Leaders programme (owner not documented in the master doc) | cohorts, levels, tasks, badges, referrals, sessions, notifications |
-| `marketplace`, `automation`, `effortfirst_private` | legacy / empty | Marketplace marketplace was renamed/evolved into Ops Tool |
+| `marketplace`, `automation`, `effortfirst_private` | legacy / empty | A predecessor marketplace product was renamed/evolved into Ops Tool |
 
 Edge functions deployed on this project: the Application Portal's `portal-*` functions, LMS functions, Pre-Med Platform `premed-*`, Growth Partner Portal `affiliate-*`, Ops Tool `ops-*` (the complete list is in `reference/sql/` and each project doc). The estate master doc records that every function on this project uses `verify_jwt=false` with in-code auth.
 

@@ -332,7 +332,7 @@ No newsletter. Lead capture = `enquiries` table (intent-tagged) and the applicat
 
 ---
 
-## 6. Standalone status vs the shared LwL estate
+## 6. Standalone status vs the shared Group estate
 
 **Fully standalone backend.** Evidence:
 
@@ -395,7 +395,7 @@ A checklist log (all items `[x]`) of the last delivered features, newest first: 
 | 2026-10 | 219 |
 | 2026-11 | 86 |
 
-Authors: `gpt-engineer-app[bot]` 2 034 (Lovable), Arif 8 + Arif-4423 1, sanjukta-08 5, nishanta-code 5, Lovable 2. **1 634 commits are titled just "Changes" / "Update plan" / "Work in progress"** — Lovable's generic messages; the 136 files in `.lovable/plan/` are the real change log for Aug–Oct.
+Authors: `an-ai-builder-bot` 2 034 (Lovable), another-contributor 8 + another-contributor 1, a-team-member 5, the-operator 5, Lovable 2. **1 634 commits are titled just "Changes" / "Update plan" / "Work in progress"** — Lovable's generic messages; the 136 files in `.lovable/plan/` are the real change log for Aug–Oct.
 
 ### 8.2 Key milestones
 
@@ -408,13 +408,13 @@ Authors: `gpt-engineer-app[bot]` 2 034 (Lovable), Arif 8 + Arif-4423 1, sanjukta
 | 2026-08-30 | `13bba97` "Built Cup microsite header", fee-section plans | Cup microsite + fees. |
 | 2026-09-02 | migrations `catalyst_applications`, `cup_applications`; `f737416`, `43cb900` | On-site apply forms for Catalyst and Cup. |
 | 2026-09-17 | `05d9e4f` "/cup/apply", `80bd0b3` curriculum masterclasses | Cup rebuilt "in the Pre-Med Platform competition" style. |
-| 2026-09-18/21 | `5207bb4`, `022cff0` (sanjukta-08) | First human commits: hero typography/partner logos; "light textured university theme"; `@lovable.dev/vite-tanstack-config`, `rolldown` override and `axe-core` enter `package.json`. |
+| 2026-09-18/21 | `5207bb4`, `022cff0` (a-team-member) | First human commits: hero typography/partner logos; "light textured university theme"; `@lovable.dev/vite-tanstack-config`, `rolldown` override and `axe-core` enter `package.json`. |
 | 2026-09-23 | migration `access_applications` + Catalyst columns; `c752465` "Updated Cup to Competition"; `a2601ea` "Linked Competition Apply btns" | Access form; rename to Competition; CTAs → Group portal. |
 | 2026-09-24/25 | `4a25c21`, `209f760`, `a5b3831` | 11–12 EST slot, eighth masterclass for top 10, rename to Impact Challenge, Catalyst hidden. |
 | 2026-09-26 | `3d1d3f2` | Catalyst paused (redirects). |
 | 2026-10-09/10 | `dd33773` "Split competition pages", `68b1f63` | Innovate for Change page built alongside Creating Livelihoods. |
 | 2026-10-29 | `8ef5da2` (gsap + lenis), plan `innovate-for-change-motion-effects-from-the-revised-spec` | Premium motion layer. |
-| 2026-11-05 | `301aae0` (sanjukta-08) | Innovate for Change → `/competition`, Livelihoods → `/dummy-comp`, fees USD 80/100; nishanta-code bumps Vite to 8.1.6, untracks `.env` and stale `package-lock.json`. |
+| 2026-11-05 | `301aae0` (a-team-member) | Innovate for Change → `/competition`, Livelihoods → `/dummy-comp`, fees USD 80/100; the-operator bumps Vite to 8.1.6, untracks `.env` and stale `package-lock.json`. |
 | 2026-11-09 | `03cfb76`…`22a7452`, `830b541`, drizzle 0000–0002 | Masterclass page, tables, Gmail SMTP via `@portable/smtp`, then CTA switched to the external Group form and `/masterclass/apply` redirected. |
 | 2026-11-12/14 | `db1bc81`, `49dfae2`, `987b0ab`, `5acaaa4`, `6154c18`, `1c5a6bc`, `9373568` | Blog, FAQ, canonical/og:url, noindex, GSC verification, title rewrites, early-bird date fixed to 30 Nov. |
 | 2026-11-16 | `dfc1d90` | Structured data across the site. |

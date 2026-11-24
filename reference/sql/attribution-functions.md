@@ -3520,7 +3520,7 @@ begin
 declare n text; hit uuid; c int;
 begin
   -- Owners are typed by hand: full names, bare first names, and honorifics
-  -- ("Gunjan Ma'am", "Shubham Sir").
+  -- ("A Staff Member", "Another Staff Member").
   n := btrim(regexp_replace(coalesce(p_name,''), '(?i)\s*\b(ma.?am|sir|madam)\b\.?', '', 'g'));
   if n = '' then return null; end if;
 
@@ -11934,8 +11934,8 @@ declare
   rid uuid;
   rcode text;
 begin
-  if not exists(select 1 from revenue_brain.test_recipient_allowlist where active and lower(email)='jatin@example-group.com')
-     or not exists(select 1 from revenue_brain.test_recipient_allowlist where active and lower(email)='gunjan@example-group.com') then
+  if not exists(select 1 from revenue_brain.test_recipient_allowlist where active and lower(email)='staff-b@example-group.com')
+     or not exists(select 1 from revenue_brain.test_recipient_allowlist where active and lower(email)='staff-a@example-group.com') then
     return jsonb_build_object('status','ERROR','reason','TEST_ALLOWLIST_INCOMPLETE');
   end if;
 
@@ -12137,26 +12137,26 @@ begin
 
 declare rid uuid; rcode text;
 begin
-  if not exists(select 1 from revenue_brain.test_recipient_allowlist where active and lower(email)='jatin@example-group.com')
-     or not exists(select 1 from revenue_brain.test_recipient_allowlist where active and lower(email)='gunjan@example-group.com') then
+  if not exists(select 1 from revenue_brain.test_recipient_allowlist where active and lower(email)='staff-b@example-group.com')
+     or not exists(select 1 from revenue_brain.test_recipient_allowlist where active and lower(email)='staff-a@example-group.com') then
     return jsonb_build_object('status','ERROR','reason','TEST_ALLOWLIST_INCOMPLETE');
   end if;
   rcode := 'YALE-E2E-' || to_char(clock_timestamp(),'YYYYMMDD-HH24MISS');
   insert into revenue_brain.autonomous_test_runs(run_code,status,provider_campaign_id,notes,started_at)
   values(rcode,'CREATED','PENDING-YALE',jsonb_build_object('purpose','Yale Essay 2027 internal rehearsal','programme','CO-YIRA-YGEC-090127',
-    'external_recipients',false,'allowed_recipients',jsonb_build_array('jatin@example-group.com','gunjan@example-group.com')),now())
+    'external_recipients',false,'allowed_recipients',jsonb_build_array('staff-b@example-group.com','staff-a@example-group.com')),now())
   returning id into rid;
   insert into revenue_brain.autonomous_test_cases(run_id,case_key,school_id,school_name,contact_id,contact_name,delivery_email,delivery_first_name,scenario,account_brief,expected_outcome)
   values
   (rid,'JATIN_POSITIVE','TEST-YALE-JATIN-'||left(rid::text,8),'Group Yale QA School — Jatin','TEST-YALE-CONTACT-JATIN-'||left(rid::text,8),'Jatin Sharma Internal QA',
-   'jatin@example-group.com','Jatin','YALE_POSITIVE_REPLY',
+   'staff-b@example-group.com','Jatin','YALE_POSITIVE_REPLY',
    jsonb_build_object('school_profile','International secondary school with strong English, humanities and Model UN programmes.',
      'signals',jsonb_build_array('English department','Model UN club','essay writing','global issues'),'relationship','NEW_TEST_ACCOUNT',
      'available_programmes',jsonb_build_array(jsonb_build_object('programme_code','CO-YIRA-YGEC-090127','status','READY','fit_hint','HIGH'),
        jsonb_build_object('programme_code','PRG-FINEDU-FLAGSHIP-COMPETITION','status','HOLD','fit_hint','LOW'))),
    'Yale Essay selected; email sent; real reply locks school and creates handoff'),
-  (rid,'GUNJAN_NOREPLY','TEST-YALE-GUNJAN-'||left(rid::text,8),'Group Yale QA School — Gunjan','TEST-YALE-CONTACT-GUNJAN-'||left(rid::text,8),'Gunjan Aggarwal Internal QA',
-   'gunjan@example-group.com','Gunjan','YALE_NO_REPLY_FULL_SEQUENCE',
+  (rid,'STAFF_A_NOREPLY','TEST-PILOT-STAFF-A-'||left(rid::text,8),'Group Pilot QA School — Staff A','TEST-PILOT-CONTACT-STAFF-A-'||left(rid::text,8),'Staff Member Internal QA',
+   'staff-a@example-group.com','StaffA','PILOT_NO_REPLY_FULL_SEQUENCE',
    jsonb_build_object('school_profile','High-performing school with debate, history and creative-writing activities.',
      'signals',jsonb_build_array('debate','history','creative writing','student competitions'),'relationship','NEW_TEST_ACCOUNT',
      'available_programmes',jsonb_build_array(jsonb_build_object('programme_code','CO-YIRA-YGEC-090127','status','READY','fit_hint','HIGH'),

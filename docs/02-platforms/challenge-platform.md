@@ -250,13 +250,13 @@ server-side work that ever existed ran as TanStack `createServerFn` handlers ins
 
 | Integration | Where | Secret / config name |
 | --- | --- | --- |
-| LwL Application Portal | `challenge.applyUrl`, `masterclass.applyUrl` | none (public URLs) |
+| Group Application Portal | `challenge.applyUrl`, `masterclass.applyUrl` | none (public URLs) |
 | Calendly | `challenge.calendlyUrl` (with baked-in UTMs `futurecareerchallengewebsitedirect`) | none |
 | Google Fonts (Outfit) | `__root.tsx` | none |
 | Supabase (dormant) | `client.server.ts`, `auth-middleware.ts` | `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_PUBLISHABLE_KEY` |
 | Lovable cron (dormant) | `cron-auth.ts` | `LOVABLE_CRON_SECRET`, `LOVABLE_CRON_SECRET_PREVIOUS` |
 | Lovable Cloud DB migrations (legacy) | `drizzle.config.ts` | `LOVABLE_DB_MIGRATION_URL` |
-| Planned but never shipped | `.lovable/plan/send-masterclass-registrations-…md` | `EXTERNAL_SUPABASE_URL`, `EXTERNAL_SUPABASE_SERVICE_KEY` (the FinLit pattern; superseded by connecting the repo directly to the shared project) |
+| Planned but never shipped | `.lovable/plan/send-masterclass-registrations-…md` | `EXTERNAL_SUPABASE_URL`, `EXTERNAL_SUPABASE_SERVICE_KEY` (the Financial Literacy Platform pattern; superseded by connecting the repo directly to the shared project) |
 | GTM / gtag | `src/lib/analytics.ts` | none in repo |
 
 ---
@@ -324,7 +324,7 @@ interest for future wiring):
 
 - `all_programs`: `program_name, partner_id, apply_url, pay_slug, sticker_price, early_bird_price, price_currency, alt_currency, eligibility_grades, format, duration, location, categories, cover_image_url, is_active`.
 - `all_masterclasses_public` (view): `title, slug, scheduled_at, ends_at, display_timezone, duration_minutes, host_name, host_university, host_mentor_id, partner_name, partner_logo_url, program_name, apply_url, capacity, status, series, session_number, learning_outcomes, recording_url`.
-- `all_cohorts`, `all_partners`, `all_mentors`, `all_sessions`, `all_events`, `all_conversions`, `all_visitors`, `all_utm_sources`, `all_utm_mediums`, `promo_codes`, `promo_redemptions`, `stripe_payments`, `razorpay_payments`, `*_applications`, `*_masterclass_regs` for doctors/finlit/lawyers/lwl/onward/purpose/sat/sirluther/teo, `offsite_program_inquiries`, views `codes_dropdown`, `program_codes`, `sirluther_*`.
+- `all_cohorts`, `all_partners`, `all_mentors`, `all_sessions`, `all_events`, `all_conversions`, `all_visitors`, `all_utm_sources`, `all_utm_mediums`, `promo_codes`, `promo_redemptions`, `stripe_payments`, `razorpay_payments`, `*_applications`, `*_masterclass_regs` for premed/finedu/prelaw/sales/fellowship/purpose/testprep/research/founders, `offsite_program_inquiries`, views `codes_dropdown`, `program_codes`, `sirluther_*`.
 
 **Writes: none at runtime.** Historically (17 Nov, a few hours) it wrote `public.masterclass_regs`
 rows with `masterclass_id` `<lovable-project-id>`, `partner_id`
@@ -393,7 +393,7 @@ double quotes). `overrides`: `js-yaml 4.3.2`, `source-map-js 1.2.2` (vulnerabili
 | --- | --- |
 | 2026-08-09 | Repo created from a Lovable remix; a "Deep Work timer" theme experiment, reset to slate (17 commits) |
 | 2026-10-09 | Site actually starts: "Added winter challenge page", base + nav, hero, How It Works, Idea Galaxy, `/register` step form, `/postcard` page, first drizzle migrations (`teams`, `registrations`, `postcards`) |
-| 2026-10-12 | Dark theme, 3D hero component (`orbit-delivery-hero.tsx`, three + r3f added), HPAIR/LwL logos, 48 reference images, Dr. Jojo photo, 2050 city window section |
+| 2026-10-12 | Dark theme, 3D hero component (`orbit-delivery-hero.tsx`, three + r3f added), HPAIR/Group logos, 48 reference images, Dr. Jojo photo, 2050 city window section |
 | 2026-10-13 | Hero globe iterations (RealisticGlobe, two "Reverted to commit 952f384" rollbacks), hero video, registrations/dates update, Financial Literacy Platform-style mentors |
 | 2026-10-17 | Six problem statements, weekend structure, rounds 2035/2050, skill card section |
 | 2026-10-19 | "Change every 2060 to 2050" check; `/ver2` and `/ver3` design variants; Challenge Platforms Lab homepage redesign plan; `/ver2`/`/ver3` removed the same day; prizes+fees merged |
@@ -416,7 +416,7 @@ masterclass 14, UTM 6, 3D/globe 8, sitemap 1, supabase/DB 5, cohort/NZ 1, round/
 
 ## 9. Gotchas and lessons
 
-1. **Fees and dates are hand-maintained constants.** `fees`, `earlyBirdDeadline.iso` (with explicit `-05:00` / `+13:00` offsets), weekend `startIso`, and `sessionTime` live in `src/config/challenge.ts` and are locked by tests in `src/config/challenge.test.ts`, `src/lib/fees.test.ts`, `src/lib/registration.test.ts`. Changing a date or price means editing config **and** tests, and the Application Portal / `all_programs` row must be updated separately – there is no shared pricing source (cf. the 2026-11-05 cross-repo early-bird fix recorded in the LwL memory). The 2026-11-05 "stale early-bird price past deadline" bug came from a component computing early-bird status without the deadline.
+1. **Fees and dates are hand-maintained constants.** `fees`, `earlyBirdDeadline.iso` (with explicit `-05:00` / `+13:00` offsets), weekend `startIso`, and `sessionTime` live in `src/config/challenge.ts` and are locked by tests in `src/config/challenge.test.ts`, `src/lib/fees.test.ts`, `src/lib/registration.test.ts`. Changing a date or price means editing config **and** tests, and the Application Portal / `all_programs` row must be updated separately – there is no shared pricing source (cf. the 2026-11-05 cross-repo early-bird fix recorded in the Group memory). The 2026-11-05 "stale early-bird price past deadline" bug came from a component computing early-bird status without the deadline.
 2. **Legacy `registrations.fee_due CHECK IN (60, 80)`** (drizzle 0000) predates the 80/100 change; irrelevant now the table lives only in the abandoned Lovable Cloud DB, but a trap if anyone re-applies those migrations.
 3. **The homepage is an HTML template, not JSX.** Editing copy means editing `src/content/home-main.html` (one 90 KB line) or the `fill()` token map in `ReferenceHome.tsx`; the React section components in `src/components/site/*` are dormant and will silently diverge. Portals depend on string replacements (`<header style=`, `<section id="tracks"`, `stroke="#DCEBFD"`), which break if the template markup changes.
 4. **Server bundle must not be code-split.** Production crashed with `__exportAll is not a function` (circular ESM chunks under Nitro/Cloudflare). The fix is the `isolateServerRuntime` plugin in `vite.config.ts`; `tests/server-runtime.test.ts` guards it. Keep the helper inside `vite.config.ts` – an earlier version importing from `build/` broke because that folder is not in deployment source ("Fixed missing config import").
