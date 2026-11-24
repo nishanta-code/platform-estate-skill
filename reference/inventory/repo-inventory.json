@@ -1,0 +1,38 @@
+{
+  "_comment": "Anonymized inventory snapshot, 2026-11-24. Counts are approximate (git log / directory counts at snapshot time). See docs/00-overview/estate-map.md for the full narrative version.",
+  "estate_projects": {
+    "estate": { "ref": "<ESTATE_REF>", "role": "shared estate: one auth.users, one schema per direct-estate platform, shared public catalogue" },
+    "data": { "ref": "<DATA_REF>", "role": "sales/meeting-intelligence + research/people/payments data project" },
+    "brain": { "ref": "<BRAIN_REF>", "role": "research-to-revenue attribution platform, RPC-gated" }
+  },
+  "platforms": [
+    { "slug": "application-portal", "role": "central application + checkout", "stack": "vite-react", "pkg_manager": "bun", "commits": 10320, "migrations": 167, "edge_functions": 73, "supabase": "estate:portal", "doc": "docs/02-platforms/application-portal.md" },
+    { "slug": "learner-portal", "role": "shared LMS", "stack": "vite-react", "pkg_manager": "bun", "commits": 3445, "migrations": 80, "edge_functions": 82, "supabase": "estate:lms", "doc": "docs/02-platforms/learner-portal.md" },
+    { "slug": "premed-platform", "role": "programme site", "stack": "vite-react", "pkg_manager": "bun", "commits": 2904, "migrations": 219, "edge_functions": 39, "supabase": "estate:premed", "doc": "docs/02-platforms/premed-platform.md" },
+    { "slug": "finedu-platform", "role": "programme site", "stack": "vite-react", "pkg_manager": "bun", "commits": 664, "migrations": 97, "edge_functions": 30, "supabase": "own-auth + estate:finedu", "doc": "docs/02-platforms/finedu-platform.md" },
+    { "slug": "prelaw-platform", "role": "programme site", "stack": "tanstack-start", "pkg_manager": "bun", "commits": 1926, "migrations": 37, "edge_functions": 3, "supabase": "own-auth + estate:prelaw", "doc": "docs/02-platforms/prelaw-platform.md" },
+    { "slug": "fellowship-platform", "role": "programme site", "stack": "vite-react", "pkg_manager": "bun", "commits": 4520, "migrations": 171, "edge_functions": 29, "supabase": "own-auth + estate:fellowship", "doc": "docs/02-platforms/fellowship-platform.md" },
+    { "slug": "research-platform", "role": "programme site (SSR)", "stack": "vite-react-ssr", "pkg_manager": "bun", "commits": 499, "migrations": 128, "edge_functions": 35, "supabase": "own-auth + estate:research", "doc": "docs/02-platforms/research-platform.md" },
+    { "slug": "testprep-platform", "role": "programme site", "stack": "vite-react", "pkg_manager": "bun", "commits": 1543, "migrations": 84, "edge_functions": 17, "supabase": "own-auth + estate:testprep", "doc": "docs/02-platforms/testprep-platform.md" },
+    { "slug": "purpose-platform", "role": "programme site (+ subscriptions)", "stack": "vite-react", "pkg_manager": "bun", "commits": 1284, "migrations": 59, "edge_functions": 26, "supabase": "own-auth + estate:purpose", "doc": "docs/02-platforms/purpose-platform.md" },
+    { "slug": "founders-platform", "role": "programme site (+ Remotion video)", "stack": "vite-react", "pkg_manager": "bun", "commits": 617, "migrations": 81, "edge_functions": 19, "supabase": "own-auth + estate:founders", "doc": "docs/02-platforms/founders-platform.md" },
+    { "slug": "ops-tool", "role": "internal staff tool", "stack": "vite-react", "pkg_manager": "bun", "commits": 2615, "migrations": 114, "edge_functions": 5, "supabase": "estate:ops", "doc": "docs/02-platforms/ops-tool.md" },
+    { "slug": "growth-partner-portal", "role": "affiliate/partner programme", "stack": "vite-react", "pkg_manager": "bun", "commits": 1110, "migrations": 6, "edge_functions": 16, "supabase": "estate:affiliate (+ writes central promo/payment-link tables)", "doc": "docs/02-platforms/growth-partner-portal.md" },
+    { "slug": "sales-command", "role": "sales / meeting-intelligence", "stack": "vite-react", "pkg_manager": "npm", "commits": 2989, "migrations": 134, "edge_functions": 79, "supabase": "migrated own-project -> data-project:sales", "doc": "docs/02-platforms/sales-command.md" },
+    { "slug": "research-outreach-platform", "role": "research-to-revenue data platform", "stack": "tanstack-start", "pkg_manager": "bun", "commits": 124, "migrations": 1, "edge_functions": 0, "supabase": "brain project, RPC-gated", "doc": "docs/02-platforms/research-outreach-platform.md" },
+    { "slug": "challenge-platform", "role": "programme site, hands off to portal", "stack": "tanstack-start", "pkg_manager": "bun", "commits": 876, "migrations": 3, "edge_functions": 0, "supabase": "estate (reads catalogue only)", "doc": "docs/02-platforms/challenge-platform.md" },
+    { "slug": "builders-lab", "role": "standalone programme site", "stack": "tanstack-start", "pkg_manager": "bun", "commits": 2055, "migrations": 4, "edge_functions": 0, "supabase": "own standalone project", "doc": "docs/02-platforms/builders-lab.md" },
+    { "slug": "marketing-site", "role": "group marketing/discovery site", "stack": "static-html", "pkg_manager": "npm", "commits": 25, "migrations": 0, "edge_functions": 0, "supabase": "none directly; reads discovery schema", "doc": "docs/02-platforms/marketing-site.md" },
+    { "slug": "counselling-crm", "role": "standalone client CRM", "stack": "tanstack-start", "pkg_manager": "bun", "commits": 27, "migrations": 17, "edge_functions": 3, "supabase": "own standalone project", "doc": "docs/02-platforms/counselling-crm.md" }
+  ],
+  "totals": {
+    "platforms": 18,
+    "approx_total_commits": 37000,
+    "approx_total_migrations": 1400,
+    "approx_total_edge_function_dirs": 480,
+    "estate_live_schema_tables": 353,
+    "estate_live_functions": 436,
+    "estate_live_policies": 385,
+    "estate_live_triggers": 222
+  }
+}
